@@ -1,11 +1,29 @@
 import request from 'supertest';
 import { createApp } from '../../../src/app';
 import type { Application } from 'express';
+import { authResolvers } from '../../../src/graphql/modules/auth/auth.resolvers'
+import { AuthenticationError } from '../../../src/utils';
+import { LoginArgs } from '../../../src/graphql/modules/auth/auth.types';
+import { MyContext } from '../../../src/types/utils.types';
+import { redisClient } from '../../../src/config/redis';
 
 let app: Application;
 
 beforeAll(async () => {
     app = await createApp();
+});
+
+jest.mock('../../../src/config/redis', () => {
+    return {
+        redisClient: {
+            get: jest.fn(),
+            set: jest.fn(),
+            del: jest.fn(),
+            incr: jest.fn(),
+            expire: jest.fn(),
+            ttl: jest.fn().mockResolvedValue(120),
+        },
+    };
 });
 
 describe("GraphQL: Auth Module - Integration Tests", () => {
@@ -53,11 +71,13 @@ describe("GraphQL: Auth Module - Integration Tests", () => {
                 query: mutation,
                 variables: {
                     input: {
-                        email: "example@email.com",
+                        email: "example123@email.com",
                         password: "this is passwords"
                     },
                 },
             });
+
+        // console.log("Log here: ", res.body)
 
         expect(res.status).toBe(401);
         expect(res.body.errors[0].code).toBe("UNAUTHENTICATED");
@@ -67,6 +87,9 @@ describe("GraphQL: Auth Module - Integration Tests", () => {
     });
 
     it("it should failed login wrong password", async () => {
+
+        (redisClient!.get as jest.Mock).mockResolvedValue(null);
+
         const res = await request(app)
             .post('/graphql')
             .send({
@@ -105,6 +128,59 @@ describe("GraphQL: Auth Module - Integration Tests", () => {
         expect(res.body.data.login.data).toHaveProperty("token");
         expect(res.body.data.login.data).toHaveProperty("user");
 
+    });
+
+});
+
+describe('login rate limit', () => {
+    it('should throw AuthenticationError if too many failed attempts', async () => {
+        // Mock context with redis.get returning "5" (max failed attempts)
+        const mockContext = {
+            redis: {
+                get: jest.fn().mockResolvedValue('5'),
+                ttl: jest.fn().mockResolvedValue(120),
+            },
+        } as unknown as MyContext;
+
+        const args: LoginArgs = {
+            input: {
+                email: 'test@example.com',
+                password: 'wrongpassword',
+            },
+        };
+
+        await expect(
+            authResolvers.Mutation.login(null, args, mockContext)
+        ).rejects.toThrow(AuthenticationError);
+
+        expect(mockContext.redis!.get).toHaveBeenCalledWith('login_fail:test@example.com');
+    });
+
+    it('should set expiration if key has no TTL (-1)', async () => {
+        const redisKey = 'login_fail:test@example.com';
+
+        const mockContext = {
+            redis: {
+                get: jest.fn().mockResolvedValue('1'),
+                ttl: jest.fn().mockResolvedValue(-1),  
+                expire: jest.fn().mockResolvedValue(true),
+                incr: jest.fn(),
+            },
+        } as unknown as MyContext;
+
+        const args: LoginArgs = {
+            input: {
+                email: 'test@example.com',
+                password: 'wrongpassword',
+            },
+        };
+
+        await expect(
+            authResolvers.Mutation.login(null, args, mockContext)
+        ).rejects.toThrow(AuthenticationError);
+
+        expect(mockContext.redis!.ttl).toHaveBeenCalledWith(redisKey);
+        expect(mockContext.redis!.expire).toHaveBeenCalledWith(redisKey, expect.any(Number));
     });
 
 });

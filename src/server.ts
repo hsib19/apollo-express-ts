@@ -10,7 +10,7 @@ export async function startServer() {
             console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
         });
     } catch (err) {
-        console.error('❌ Failed to start server:', err);
+        console.error('Failed to start server:', err);
     }
 }
 

@@ -1,5 +1,6 @@
 import * as appModule from '../src/app';
 import { startServer } from '../src/server';
+import * as redisModule from '../src/config/redis';
 
 describe('server.ts', () => {
     const listenMock = jest.fn((port, cb) => cb?.());
@@ -15,7 +16,7 @@ describe('server.ts', () => {
 
         const logSpy = jest.spyOn(console, 'log').mockImplementation(() => { });
 
-        await startServer(); 
+        await startServer();
 
         expect(appModule.createApp).toHaveBeenCalled();
         expect(listenMock).toHaveBeenCalledWith(4000, expect.any(Function));
@@ -32,10 +33,10 @@ describe('server.ts', () => {
 
         const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
 
-        await startServer(); 
+        await startServer();
 
         expect(appModule.createApp).toHaveBeenCalled();
-        expect(errorSpy).toHaveBeenCalledWith('❌ Failed to start server:', error);
+        expect(errorSpy).toHaveBeenCalledWith('Failed to start server:', error);
 
         errorSpy.mockRestore();
     });

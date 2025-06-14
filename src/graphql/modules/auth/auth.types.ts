@@ -1,9 +1,9 @@
 import { User } from "../user/user.types";
 
-export type CreateUserArgs = {
+export type LoginArgs = {
     input: {
-        name: string;
         email: string;
+        password: string;
     };
 };
 

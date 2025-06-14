@@ -12,5 +12,10 @@ export interface EnvConfig {
     auth: {
         jwtSecret: string;
         jwtExpiresIn: string;
+    },
+    redis: {
+        host: string | '127.0.0.1';
+        port: number | 6379;
+        password: string | undefined;
     }
 }

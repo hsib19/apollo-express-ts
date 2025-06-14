@@ -1,10 +1,14 @@
 import { sequelize } from '../src/db/sequelize';
+import { redisClient } from '../src/config/redis';
 
-// Optional: Setup global mocks or variables
 beforeAll(async () => {
     await sequelize.authenticate();
 });
 
 afterAll(async () => {
     await sequelize.close();
+
+    if (redisClient) {
+        await redisClient.quit();
+    }
 });

@@ -1,3 +1,5 @@
+import Redis from "ioredis";
+
 export interface JwtPayload {
     userId: number;
     email?: string;
@@ -11,4 +13,5 @@ export type MyContext = {
         email: string;
         role: string;
     };
+    redis?: Redis;
 };

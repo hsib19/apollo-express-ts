@@ -18,4 +18,9 @@ export const env: EnvConfig = {
         jwtSecret: process.env.JWT_SECRET || 'your-default-jwt-secret',
         jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1d',
     },
+    redis: {
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+        password: process.env.REDIS_PASSWORD,
+    }
 };

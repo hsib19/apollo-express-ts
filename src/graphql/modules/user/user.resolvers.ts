@@ -5,18 +5,33 @@ import { SuccessResponse, ValidationError } from '@utils';
 import { FilterUserArgs, UsersResponse } from './user.types';
 import { userFilterSchema } from './user.schema';
 import { withAuth } from '@/middlewares/withAuth';
+import { MyContext } from '@/types/utils.types';
 
 export const userResolvers = {
     Query: {
         users: withAuth ( async (
             _: unknown,
-            args: FilterUserArgs
+            args: FilterUserArgs,
+            context: MyContext
         ): Promise<SuccessResponse<UsersResponse>> => {
             try {
                
                 const input = userFilterSchema.parse(args.input);
                 const { page, limit, search, sortBy, sortOrder } = input;
                 const offset = (page - 1) * limit;
+
+                const cacheKey = `users:${search || 'all'}:${page}:${limit}`;
+                const cached = await context.redis.get(cacheKey);
+
+                if (cached) {
+                    
+                    const parsed = JSON.parse(cached);
+                    return {
+                        code: "200",
+                        message: "Fetch users success (from cache)",
+                        data: parsed
+                    };
+                }
 
                 const where = search
                     ? {
@@ -34,15 +49,19 @@ export const userResolvers = {
                     attributes: ["id", 'email', 'is_active', 'role'],
                 });
 
+                const result: UsersResponse = {
+                    total: count,
+                    page,
+                    limit,
+                    data: rows,
+                };
+
+                await context.redis.set(cacheKey, JSON.stringify(result), 'EX', 60); // cache 60 detik
+
                 return {
                     code: "200",
                     message: "Fetch users success",
-                    data: {
-                        total: count,
-                        page,
-                        limit,
-                        data: rows,
-                    }
+                    data: result
                 };
 
             } catch (error) {
