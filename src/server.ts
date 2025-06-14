@@ -1,4 +1,3 @@
-import './config/env';
 import { createApp } from './app';
 import { env } from './config/env'
 

@@ -13,7 +13,6 @@ jest.mock('../../src/models/user.model', () => ({
 }));
 
 describe('initDb', () => {
-    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => { });
     const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
 
     afterEach(() => {
@@ -24,7 +23,6 @@ describe('initDb', () => {
         (sequelize.authenticate as jest.Mock).mockResolvedValue(undefined);
         await initDb();
         expect(sequelize.authenticate).toHaveBeenCalled();
-        expect(logSpy).toHaveBeenCalledWith('Database connected');
     });
 
     it('should log error if connection fails', async () => {

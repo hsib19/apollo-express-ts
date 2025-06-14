@@ -15,6 +15,12 @@
             ],
             "@graphql": [
                 "src/graphql/index.ts"
+            ],
+            "@models": [
+                "src/models/index.ts"
+            ],
+            "@utils": [
+                "src/utils/index.ts"
             ]
         },
         "target": "es2020",

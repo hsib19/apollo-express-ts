@@ -1,9 +1,8 @@
 import { sequelize } from '../db/sequelize';
 import { User, initUserModel } from './user.model';
 
-export const db = {
-    sequelize,
-    User,
+export {
+    User
 };
 
 export const initDb = async () => {
