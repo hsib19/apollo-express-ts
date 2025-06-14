@@ -1,0 +1,39 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Optional: OS-specific
+.DS_Store
+Thumbs.db
+
+# TypeScript
+dist/
+build/
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# VSCode settings
+.vscode/
+
+# Logs
+logs
+*.log
+log/
+
+# Coverage reports
+coverage/
+
+# IDEs
+.idea/
+*.sw?
+*.sublime*
+
+# Optional: playground or test output
+playground/
