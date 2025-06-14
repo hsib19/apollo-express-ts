@@ -42,13 +42,13 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
 DB_PASS=
-DB_NAME=ecommerce
+DB_NAME=db_name
 
 # Application
 PORT=4000
 
 # JWT Authentication
-JWT_SECRET=scntx.dev-secure100$
+JWT_SECRET=yout-jwt-secret
 JWT_EXPIRES_IN=1d
 
 # Redis
