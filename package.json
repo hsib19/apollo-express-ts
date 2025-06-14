@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "npx ts-node -r tsconfig-paths/register --project tsconfig.json src/index.ts",
-    "start": "tsc && node dist/index.js"
+    "dev": "npx ts-node -r tsconfig-paths/register --project tsconfig.json src/server.ts",
+    "start": "tsc && node dist/server.js",
+    "test": "npx jest",
+    "test:coverage": "npx jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -24,7 +26,12 @@
     "@types/body-parser": "^1.19.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/jest": "^29.5.14",
     "@types/node": "^24.0.1",
+    "@types/supertest": "^6.0.3",
+    "jest": "^30.0.0",
+    "supertest": "^7.1.1",
+    "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
