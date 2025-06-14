@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import { User } from '@models';
 import { GraphQLError } from 'graphql';
-import { SuccessResponse, ValidationError } from '@utils';
+import { SuccessResponse } from '@utils';
 import { FilterUserArgs, UsersResponse } from './user.types';
 import { userFilterSchema } from './user.schema';
 import { withAuth } from '@/middlewares/withAuth';
@@ -63,7 +63,7 @@ export const userResolvers = {
                     message: "Fetch users success",
                     data: result
                 };
-
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (error) {
                 throw new GraphQLError('Failed to fetch users.');
             }
