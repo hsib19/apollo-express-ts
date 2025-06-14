@@ -1,8 +1,14 @@
 export interface JwtPayload {
     userId: number;
-    [key: string]: any;
+    email?: string;
+    role?: string;
+    [key: string]: string | number | boolean | undefined;
 }
 
 export type MyContext = {
-    userId: string;
+    user?: {
+        id: string;
+        email: string;
+        role: string;
+    };
 };

@@ -5,6 +5,8 @@ import { expressMiddleware } from '@as-integrations/express5';
 import { typeDefs, resolvers } from '@graphql';
 import { initDb } from './models';
 import { getAuthUser } from './middlewares/getAuthUser';
+import { MyContext } from './types/utils.types';
+import { formatGraphQLError } from './utils/formatGraphQLError';
 
 export async function createApp() {
     const app = express();
@@ -12,22 +14,10 @@ export async function createApp() {
     // initialize sequelize
     await initDb();
 
-    const server = new ApolloServer({
+    const server = new ApolloServer<MyContext>({
         typeDefs,
         resolvers,
-        formatError: (err) => {
-            // Log error stack
-            console.error(err);
-
-            const code = err.extensions?.code || 'INTERNAL_SERVER_ERROR';
-            const message = err.message || 'Unexpected error occurred';
-
-            return {
-                code,
-                message,
-                details: err.extensions?.details,
-            };
-        },
+        formatError: formatGraphQLError
     });
 
     await server.start();

@@ -1,11 +1,27 @@
-import { AuthenticationError } from "@/utils";
+import { GraphQLResolveInfo } from 'graphql';
+import { AuthenticationError } from '@/utils';
+import { MyContext } from '@/types/utils.types';
 
-export const withAuth = (resolver: Function) => {
-    return async (parent: any, args: any, context: any, info: any) => {
-        const { user } = context;
-
-        if (!user) {
-            throw new AuthenticationError("Invalid token")
+export const withAuth = <
+    Parent = unknown,
+    Args = Record<string, unknown>,
+    Result = unknown
+>(
+    resolver: (
+        parent: Parent,
+        args: Args,
+        context: MyContext,
+        info: GraphQLResolveInfo
+    ) => Promise<Result> | Result
+) => {
+    return async (
+        parent: Parent,
+        args: Args,
+        context: MyContext,
+        info: GraphQLResolveInfo
+    ): Promise<Result> => {
+        if (!context.user) {
+            throw new AuthenticationError('Invalid token');
         }
 
         return resolver(parent, args, context, info);

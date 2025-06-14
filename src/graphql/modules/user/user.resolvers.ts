@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import { User } from '@models';
 import { GraphQLError } from 'graphql';
-import { SuccessResponse } from '@utils';
+import { SuccessResponse, ValidationError } from '@utils';
 import { FilterUserArgs, UsersResponse } from './user.types';
 import { userFilterSchema } from './user.schema';
 import { withAuth } from '@/middlewares/withAuth';
@@ -14,14 +14,13 @@ export const userResolvers = {
         ): Promise<SuccessResponse<UsersResponse>> => {
             try {
                
-                const input = userFilterSchema.parse(args);
+                const input = userFilterSchema.parse(args.input);
                 const { page, limit, search, sortBy, sortOrder } = input;
                 const offset = (page - 1) * limit;
 
                 const where = search
                     ? {
                         [Op.or]: [
-                            { username: { [Op.like]: `%${search}%` } },
                             { email: { [Op.like]: `%${search}%` } },
                         ],
                     }
@@ -47,7 +46,6 @@ export const userResolvers = {
                 };
 
             } catch (error) {
-                console.error('Error fetching users:', error);
                 throw new GraphQLError('Failed to fetch users.');
             }
         }),

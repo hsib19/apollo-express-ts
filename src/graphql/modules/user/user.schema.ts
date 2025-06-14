@@ -16,7 +16,7 @@ export const userFilterSchema = z.object({
         .optional()
         .default(10),
 
-    search: z.string().min(1).max(100).optional(),
+    search: z.string().max(100).optional(),
 
     sortBy: z
         .enum(['id', 'username', 'email', 'created_at', 'updated_at'])

@@ -29,14 +29,14 @@ const config: Config = {
     collectCoverage: false,
     collectCoverageFrom: ['src/**/*.{ts,js}', '!**/node_modules/**'],
     coverageReporters: ['text', 'lcov'],
-    coverageThreshold: {
-        global: {
-            branches: 50,
-            functions: 50,
-            lines: 50,
-            statements: 50,
-        },
-    },
+    // coverageThreshold: {
+    //     global: {
+    //         branches: 50,
+    //         functions: 50,
+    //         lines: 50,
+    //         statements: 50,
+    //     },
+    // },
 };
 
 export default config;

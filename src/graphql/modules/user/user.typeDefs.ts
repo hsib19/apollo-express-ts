@@ -25,7 +25,7 @@ export const userTypeDefs = gql`
   input FilterInput {
     page: Int!
     limit: Int!
-    search: String!
+    search: String
     sortBy: SortBy!
     sortOrder: SortOrder!
   }

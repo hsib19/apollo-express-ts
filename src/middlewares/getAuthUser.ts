@@ -1,7 +1,5 @@
-import jwt from 'jsonwebtoken';
 import { Request } from 'express';
-
-const JWT_SECRET = process.env.JWT_SECRET!;
+import { verifyToken } from '@/utils';
 
 export const getAuthUser = (req: Request) => {
     const authHeader = req.headers.authorization;
@@ -9,7 +7,7 @@ export const getAuthUser = (req: Request) => {
 
     const token = authHeader.split(' ')[1];
     try {
-        return jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string };
+        return verifyToken(token)
     } catch {
         return null;
     }

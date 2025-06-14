@@ -1,16 +1,18 @@
 export type FilterUserArgs = {
-    page?: number;
-    limit?: number;
-    search?: string;
-    sortBy?: keyof User;
-    sortOrder?: 'asc' | 'desc';
+    input: {
+        page?: number;
+        limit?: number;
+        search?: string;
+        sortBy?: keyof User;
+        sortOrder?: 'asc' | 'desc';
+    }
 }
 
 export interface User {
     id: number;
-    email: String;
-    is_active: Boolean;
-    role: String;
+    email: string;
+    is_active: boolean;
+    role: string;
 }
 export interface UsersResponse {
     total: number;

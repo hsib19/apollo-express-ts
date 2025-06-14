@@ -19,10 +19,10 @@ export const authResolvers = {
             const { email, password } = parsed.data;
 
             const user = await User.findOne({ where: { email } });
-            if (!user) throw new AuthenticationError('Invalid credentials');
+            if (!user) throw new AuthenticationError('Invalid email or password');
 
             const valid = await verifyPassword(password, user.password_hash);
-            if (!valid) throw new AuthenticationError('Invalid credentials');
+            if (!valid) throw new AuthenticationError('Invalid email or password');
 
             const token = generateToken({ userId: user.id });
 
