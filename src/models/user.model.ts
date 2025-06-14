@@ -4,8 +4,8 @@ import {
     InferAttributes,
     InferCreationAttributes,
     CreationOptional,
+    Sequelize,
 } from 'sequelize';
-import { sequelize } from '@/db/sequelize';
 
 interface UserAttributes {
     id: number;
@@ -18,6 +18,7 @@ interface UserAttributes {
     created_at: Date;
     updated_at: Date;
 }
+
 export class User
     extends Model<InferAttributes<User>, InferCreationAttributes<User>>
     implements UserAttributes {
@@ -32,54 +33,56 @@ export class User
     declare updated_at: CreationOptional<Date>;
 }
 
-User.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
+export function initUserModel(sequelize: Sequelize) {
+    User.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                primaryKey: true,
+            },
+            email: {
+                type: DataTypes.STRING(100),
+                allowNull: false,
+                unique: true,
+            },
+            password_hash: {
+                type: DataTypes.STRING(255),
+                allowNull: false,
+            },
+            role: {
+                type: DataTypes.ENUM('admin', 'customer'),
+                allowNull: false,
+            },
+            is_active: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: true,
+            },
+            email_verified_at: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
+            last_login_at: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
+            created_at: {
+                type: DataTypes.DATE,
+                allowNull: false,
+                defaultValue: DataTypes.NOW,
+            },
+            updated_at: {
+                type: DataTypes.DATE,
+                allowNull: false,
+                defaultValue: DataTypes.NOW,
+            },
         },
-        email: {
-            type: DataTypes.STRING(100),
-            allowNull: false,
-            unique: true,
-        },
-        password_hash: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        },
-        role: {
-            type: DataTypes.ENUM('admin', 'customer'),
-            allowNull: false,
-        },
-        is_active: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: true,
-        },
-        email_verified_at: {
-            type: DataTypes.DATE,
-            allowNull: true,
-        },
-        last_login_at: {
-            type: DataTypes.DATE,
-            allowNull: true,
-        },
-        created_at: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
-        updated_at: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
-    },
-    {
-        sequelize,
-        tableName: 'users',
-        modelName: 'User',
-        timestamps: false, 
-    }
-);
+        {
+            sequelize,
+            tableName: 'users',
+            modelName: 'User',
+            timestamps: false,
+        }
+    );
+}
