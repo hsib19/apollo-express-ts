@@ -3,9 +3,13 @@ import cors from 'cors';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express5';
 import { typeDefs, resolvers } from '@graphql';
+import { initDb } from './models';
 
 export async function createApp() {
     const app = express();
+
+    // initialize sequelize
+    await initDb();
 
     const server = new ApolloServer({
         typeDefs,

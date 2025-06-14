@@ -1,6 +1,8 @@
+import './config/env';
 import { createApp } from './app';
+import { env } from './config/env'
 
-const PORT = process.env.PORT || 4000;
+const PORT = env.app.port;
 
 export async function startServer() {
     try {

@@ -9,7 +9,13 @@
             "@/*": [
                 "src/*"
             ],
-            "@graphql": ["src/graphql/index.ts"]
+            "@config/*": ["src/config/*"],
+            "@db/*": [
+                "src/db/*"
+            ],
+            "@graphql": [
+                "src/graphql/index.ts"
+            ]
         },
         "target": "es2020",
         "module": "commonjs",
