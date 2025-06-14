@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "npx ts-node src/index.ts",
+    "dev": "npx ts-node -r tsconfig-paths/register --project tsconfig.json src/index.ts",
     "start": "tsc && node dist/index.js"
   },
   "keywords": [],
@@ -13,6 +13,7 @@
   "dependencies": {
     "@apollo/server": "^4.12.2",
     "@as-integrations/express5": "^1.1.0",
+    "@graphql-tools/merge": "^9.0.24",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
@@ -25,6 +26,7 @@
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.1",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
   }
 }
